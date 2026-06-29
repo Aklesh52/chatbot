@@ -1,4 +1,4 @@
-import { Chat } from '@/components';
+import { Chat } from '../chat/components/chat';
 import { generateId } from 'ai';
 
 export default function Page() {
