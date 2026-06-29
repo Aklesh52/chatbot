@@ -114,3 +114,10 @@ export const modelsByProvider = chatModels.reduce<Record<string, ChatModel[]>>((
   acc[model.provider].push(model);
   return acc;
 }, {});
+export const titleModel = {
+  id: "openai/gpt-4o-mini",
+  name: "GPT-4o Mini",
+  provider: "openai",
+  description: "Fast, lightweight intelligence for diverse tasks.",
+  gatewayOrder: ["openai"],
+};
