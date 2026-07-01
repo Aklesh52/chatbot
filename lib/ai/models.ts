@@ -55,8 +55,31 @@ export const chatModels: ChatModel[] = [
     provider: "openai",
     description: "Fast, lightweight intelligence for diverse tasks.",
     gatewayOrder: ["openai"],
+  },
+  {
+    id: "qwen/qwen-2.5-coder-32b",
+    name: "Qwen 2.5 Coder 32B",
+    provider: "qwen",
+    description: "Highly capable coding model, efficient and fast.",
+    gatewayOrder: ["groq", "deepinfra"],
+  },
+  {
+    id: "minimax/minimax-m2-5",
+    name: "MiniMax M2.5",
+    provider: "minimax",
+    description: "High-performance productivity and coding model.",
+    gatewayOrder: ["openrouter"],
+  },
+  {
+    id: "meta-llama/llama-3.3-70b-instruct",
+    name: "Llama 3.3 70B",
+    provider: "meta",
+    description: "The gold standard for free, high-performance general tasks.",
+    gatewayOrder: ["groq", "deepinfra"],
   }
 ];
+
+export const DEFAULT_CHAT_MODEL = "openai/gpt-4o-mini";
 
 export const isDemo = process.env.IS_DEMO === "1";
 
@@ -76,13 +99,10 @@ export async function getAllGatewayModels(): Promise<GatewayModelWithCapabilitie
     const res = await fetch("https://ai-gateway.vercel.sh/v1/models", {
       next: { revalidate: 86_400 },
     });
-
     if (!res.ok) {
       return [];
     }
-
     const json = await res.json();
-
     return (json.data ?? [])
       .filter((m: GatewayModel) => m.type === "language")
       .map((m: GatewayModel) => ({
@@ -114,6 +134,7 @@ export const modelsByProvider = chatModels.reduce<Record<string, ChatModel[]>>((
   acc[model.provider].push(model);
   return acc;
 }, {});
+
 export const titleModel = {
   id: "openai/gpt-4o-mini",
   name: "GPT-4o Mini",
