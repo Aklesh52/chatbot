@@ -60,8 +60,14 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
           attachments={attachments}
           setAttachments={setAttachments}
           stop={async () => {}}
-          // Added selectedModelId as the error required it
-          selectedModelId={""} 
+          // All required props from your last error message:
+          messages={messages || initialMessages}
+          setMessages={setMessages}
+          votes={votes}
+          sendMessage={async () => {}}
+          isLoading={isLoading}
+          isReadonly={isReadonly}
+          selectedModelId={""}
         />
       )}
     </div>
