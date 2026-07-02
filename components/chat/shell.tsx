@@ -15,6 +15,8 @@ interface ChatShellProps {
 
 export function ChatShell({ id, initialMessages }: ChatShellProps) {
   const [editingMessage, setEditingMessage] = useState<ChatMessage | null>(null);
+  // Added input state here as it seems to be required by Artifact
+  const [input, setInput] = useState("");
 
   const { 
     chatId, 
@@ -44,11 +46,19 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
           onEditMessage={setEditingMessage}
           regenerate={async () => {}} 
           isArtifactVisible={isArtifactVisible}
-          // Changed undefined to an empty string to satisfy the string type requirement
           selectedModelId={""} 
         />
       </div>
-      {isArtifactVisible && <Artifact />}
+      {isArtifactVisible && (
+        <Artifact 
+          chatId={chatId || id}
+          input={input}
+          setInput={setInput}
+          addToolApprovalResponse={addToolApprovalResponse}
+          // If the build complains about other missing props for Artifact, 
+          // add them here following the same pattern.
+        />
+      )}
     </div>
   );
 }
