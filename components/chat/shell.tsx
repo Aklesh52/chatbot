@@ -59,12 +59,11 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
           status={status}
           attachments={attachments}
           setAttachments={setAttachments}
-          stop={() => {}}
+          // Fix: Added 'async' here to match the required Promise type
+          stop={async () => {}}
           isLoading={isLoading}
           votes={votes}
           messages={messages || initialMessages}
-          // Adding these to satisfy "and 8 more" requirements
-          // If it asks for more, these are standard placeholders
           setMessages={setMessages}
           isReadonly={isReadonly}
         />
