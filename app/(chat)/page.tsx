@@ -1,4 +1,4 @@
-import { ChatShell } from "@/components/chat/shell";// Triggering a clean build
+import { Chat } from "@/components/chat";
 import { generateId } from 'ai';
 
 export default function Page() {
