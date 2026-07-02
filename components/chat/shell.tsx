@@ -1,41 +1,52 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useArtifactSelector } from "@/hooks/use-artifact";
 import { useArtifact } from "@/hooks/use-artifact";
 import type { Attachment, ChatMessage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Artifact } from "./artifact";
-import { ChatHeader } from "./chat-header";
-import { DataStreamHandler } from "./data-stream-handler";
 import { Messages } from "./messages";
 
-// 1. Define the properties this component is allowed to receive
+// 1. Define required properties
 interface ChatShellProps {
   id: string;
-  initialMessages: any[]; // Or replace 'any[]' with a specific message type if you have one
+  initialMessages: any[];
 }
 
-// 2. Apply the interface to the function
 export function ChatShell({ id, initialMessages }: ChatShellProps) {
-  // --- All your existing logic remains exactly the same below ---
-  
+  // IMPORTANT: Ensure all variables used below are available from your hook.
+  // If you get a "not defined" error, add the missing variable to the destructuring below.
   const [editingMessage, setEditingMessage] = useState<ChatMessage | null>(null);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   
+  // Assuming these are the variables from your hook that the Messages component needs
+  const { 
+ // Replace the line with this:
+const { chatId, messages, setMessages, addToolApprovalResponse, status, votes, isLoading, isReadonly } = useActiveChat();
+
   const isArtifactVisible = useArtifactSelector((state) => state.isVisible);
   const { setArtifact } = useArtifact();
-  
-  // Note: Ensure your existing 'stop', 'chatId', 'isReadonly', etc., 
-  // are defined or imported correctly as they were before.
 
   return (
     <div className="flex h-dvh w-full flex-row overflow-hidden">
       <div className={cn("flex min-w-0 flex-col bg-sidebar transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]", isArtifactVisible ? "w-[40%]" : "w-full")}>
-        {/* Your header and other components go here */}
+        
         <Messages 
-          // ... ensure all props passed here match your component requirements
+          chatId={chatId || id}
+          messages={messages || initialMessages}
+          setMessages={setMessages}
+          addToolApprovalResponse={addToolApprovalResponse}
+          status={status}
+          votes={votes}
+          isLoading={isLoading}
+          isReadonly={isReadonly}
+          editingMessage={editingMessage}
+          setEditingMessage={setEditingMessage}
+          attachments={attachments}
+          setAttachments={setAttachments}
         />
+        
       </div>
       {isArtifactVisible && <Artifact />}
     </div>
