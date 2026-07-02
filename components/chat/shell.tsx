@@ -39,7 +39,7 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
       <div className={cn("flex min-w-0 flex-col bg-sidebar transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]", isArtifactVisible ? "w-[40%]" : "w-full")}>
         <Messages 
   chatId={chatId || id}
-  <Messages 
+ <Messages 
   chatId={chatId || id}
   messages={messages || initialMessages}
   setMessages={setMessages}
@@ -49,7 +49,5 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
   isLoading={isLoading}
   isReadonly={isReadonly}
   onEditMessage={setEditingMessage} 
-  // Attachments props removed because they aren't supported by the Messages component
-/>
-  );
+/>  );
 }
