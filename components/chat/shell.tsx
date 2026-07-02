@@ -39,6 +39,8 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
       <div className={cn("flex min-w-0 flex-col bg-sidebar transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]", isArtifactVisible ? "w-[40%]" : "w-full")}>
         <Messages 
   chatId={chatId || id}
+  <Messages 
+  chatId={chatId || id}
   messages={messages || initialMessages}
   setMessages={setMessages}
   addToolApprovalResponse={addToolApprovalResponse}
@@ -46,14 +48,8 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
   votes={votes}
   isLoading={isLoading}
   isReadonly={isReadonly}
-  // Change the lines causing the error to the correct prop name:
   onEditMessage={setEditingMessage} 
-  // If you also need to pass attachments, check if the component accepts them:
-  attachments={attachments}
-  setAttachments={setAttachments}
+  // Attachments props removed because they aren't supported by the Messages component
 />
-      </div>
-      {isArtifactVisible && <Artifact />}
-    </div>
   );
 }
