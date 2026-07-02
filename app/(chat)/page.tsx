@@ -1,9 +1,8 @@
-import Chat from "@/components/chat/shell";
+import { ChatShell } from "@/components/chat/shell";
 import { generateId } from 'ai';
 
 export default function Page() {
   const id = generateId();
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
       <div className="max-w-md w-full space-y-6 text-center">
@@ -14,7 +13,7 @@ export default function Page() {
           Welcome! How can we assist you with your hospitality and booking needs today?
         </p>
       </div>
-      <Chat id={id} initialMessages={[]} />
+      <ChatShell id={id} initialMessages={[]} />
     </div>
   );
 }
