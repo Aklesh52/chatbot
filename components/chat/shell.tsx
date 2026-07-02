@@ -42,7 +42,9 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
           isLoading={isLoading}
           isReadonly={isReadonly}
           onEditMessage={setEditingMessage}
-          regenerate={() => {}} 
+          
+          // Updated: changed to async () => {} to return a Promise
+          regenerate={async () => {}} 
           isArtifactVisible={isArtifactVisible}
           selectedModelId={undefined} 
         />
