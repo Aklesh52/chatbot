@@ -142,10 +142,18 @@ export const titleModel = {
   description: "Fast, lightweight intelligence for diverse tasks.",
   gatewayOrder: ["openai"],
 };
-export function getCapabilities(modelId: string): ModelCapabilities {
-  return {
-    tools: true,
-    vision: true,
-    reasoning: false,
-  };
+
+// Fixed to return a record so calling getCapabilities() matches your existing app code
+export async function getCapabilities(): Promise<Record<string, ModelCapabilities>> {
+  const capabilities: Record<string, ModelCapabilities> = {};
+  
+  for (const model of chatModels) {
+    capabilities[model.id] = {
+      tools: true,
+      vision: true,
+      reasoning: false,
+    };
+  }
+  
+  return capabilities;
 }
