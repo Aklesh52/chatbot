@@ -142,3 +142,10 @@ export const titleModel = {
   description: "Fast, lightweight intelligence for diverse tasks.",
   gatewayOrder: ["openai"],
 };
+export function getCapabilities(modelId: string): ModelCapabilities {
+  return {
+    tools: true,
+    vision: true,
+    reasoning: false,
+  };
+}
