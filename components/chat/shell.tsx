@@ -42,11 +42,10 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
           isLoading={isLoading}
           isReadonly={isReadonly}
           onEditMessage={setEditingMessage}
-          
-          // Updated: changed to async () => {} to return a Promise
           regenerate={async () => {}} 
           isArtifactVisible={isArtifactVisible}
-          selectedModelId={undefined} 
+          // Changed undefined to an empty string to satisfy the string type requirement
+          selectedModelId={""} 
         />
       </div>
       {isArtifactVisible && <Artifact />}
