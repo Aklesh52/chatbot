@@ -1,14 +1,16 @@
-// app/(chat)/page.tsx
+"use client";
 
-export const dynamic = 'force-dynamic';
+import { ChatShell } from "@/components/chat/shell";
 
-export default async function Page() {
+export default function Page() {
+  // Client components can safely generate random IDs because they run in the browser
   const id = crypto.randomUUID();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
       <div className="max-w-md w-full space-y-6 text-center">
-        {/* Your Chat Shell Component Goes Here */}
+        {/* You likely have a ChatShell here to render the chat */}
+        <ChatShell id={id} initialMessages={[]} />
       </div>
     </div>
   );
