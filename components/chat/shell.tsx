@@ -38,19 +38,20 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
     <div className="flex h-dvh w-full flex-row overflow-hidden">
       <div className={cn("flex min-w-0 flex-col bg-sidebar transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]", isArtifactVisible ? "w-[40%]" : "w-full")}>
         <Messages 
-          chatId={chatId || id}
-          messages={messages || initialMessages}
-          setMessages={setMessages}
-          addToolApprovalResponse={addToolApprovalResponse}
-          status={status}
-          votes={votes}
-          isLoading={isLoading}
-          isReadonly={isReadonly}
-          editingMessage={editingMessage}
-          setEditingMessage={setEditingMessage}
-          attachments={attachments}
-          setAttachments={setAttachments}
-        />
+  chatId={chatId || id}
+  messages={messages || initialMessages}
+  setMessages={setMessages}
+  addToolApprovalResponse={addToolApprovalResponse}
+  status={status}
+  votes={votes}
+  isLoading={isLoading}
+  isReadonly={isReadonly}
+  // Change the lines causing the error to the correct prop name:
+  onEditMessage={setEditingMessage} 
+  // If you also need to pass attachments, check if the component accepts them:
+  attachments={attachments}
+  setAttachments={setAttachments}
+/>
       </div>
       {isArtifactVisible && <Artifact />}
     </div>
