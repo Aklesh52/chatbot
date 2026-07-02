@@ -33,43 +33,4 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
 
   return (
     <div className="flex h-dvh w-full flex-row overflow-hidden">
-      <div className={cn("flex min-w-0 flex-col bg-sidebar transition-[width] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]", isArtifactVisible ? "w-[40%]" : "w-full")}>
-        <Messages 
-          chatId={chatId || id}
-          messages={messages || initialMessages}
-          setMessages={setMessages}
-          addToolApprovalResponse={addToolApprovalResponse}
-          status={status}
-          votes={votes}
-          isLoading={isLoading}
-          isReadonly={isReadonly}
-          onEditMessage={setEditingMessage}
-          regenerate={async () => {}} 
-          isArtifactVisible={isArtifactVisible}
-          selectedModelId={""} 
-        />
-      </div>
-      
-      {isArtifactVisible && (
-        <Artifact 
-          chatId={chatId || id}
-          input={input}
-          setInput={setInput}
-          addToolApprovalResponse={addToolApprovalResponse}
-          status={status}
-          attachments={attachments}
-          setAttachments={setAttachments}
-          stop={async () => {}}
-          // All required props from your last error message:
-          messages={messages || initialMessages}
-          setMessages={setMessages}
-          votes={votes}
-          sendMessage={async () => {}}
-          isLoading={isLoading}
-          isReadonly={isReadonly}
-          selectedModelId={""}
-        />
-      )}
-    </div>
-  );
-}
+      <div className={cn("flex min-w-0 flex-col bg-sidebar transition-[width] duration-300 ease-[cubic-bezier(0.32,0.7Normally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
