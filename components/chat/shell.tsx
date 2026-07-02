@@ -59,13 +59,9 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
           status={status}
           attachments={attachments}
           setAttachments={setAttachments}
-          // Fix: Added 'async' here to match the required Promise type
           stop={async () => {}}
-          isLoading={isLoading}
-          votes={votes}
-          messages={messages || initialMessages}
-          setMessages={setMessages}
-          isReadonly={isReadonly}
+          // Added selectedModelId as the error required it
+          selectedModelId={""} 
         />
       )}
     </div>
