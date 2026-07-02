@@ -18,6 +18,7 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
   const [editingMessage, setEditingMessage] = useState<ChatMessage | null>(null);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
 
+  // 1. Added 'regenerate' and 'selectedModelId' to the hook destructuring
   const { 
     chatId, 
     messages, 
@@ -26,7 +27,9 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
     status, 
     votes, 
     isLoading, 
-    isReadonly 
+    isReadonly,
+    regenerate,
+    selectedModelId 
   } = useActiveChat();
 
   const isArtifactVisible = useArtifactSelector((state) => state.isVisible);
@@ -43,7 +46,11 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
           votes={votes}
           isLoading={isLoading}
           isReadonly={isReadonly}
-          onEditMessage={setEditingMessage} 
+          onEditMessage={setEditingMessage}
+          // 2. Added the missing props here
+          regenerate={regenerate}
+          isArtifactVisible={isArtifactVisible}
+          selectedModelId={selectedModelId}
         />
       </div>
       {isArtifactVisible && <Artifact />}
