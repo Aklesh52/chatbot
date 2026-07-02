@@ -15,8 +15,8 @@ interface ChatShellProps {
 
 export function ChatShell({ id, initialMessages }: ChatShellProps) {
   const [editingMessage, setEditingMessage] = useState<ChatMessage | null>(null);
-  // Added input state here as it seems to be required by Artifact
   const [input, setInput] = useState("");
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
 
   const { 
     chatId, 
@@ -49,14 +49,24 @@ export function ChatShell({ id, initialMessages }: ChatShellProps) {
           selectedModelId={""} 
         />
       </div>
+      
       {isArtifactVisible && (
         <Artifact 
           chatId={chatId || id}
           input={input}
           setInput={setInput}
           addToolApprovalResponse={addToolApprovalResponse}
-          // If the build complains about other missing props for Artifact, 
-          // add them here following the same pattern.
+          status={status}
+          attachments={attachments}
+          setAttachments={setAttachments}
+          stop={() => {}}
+          isLoading={isLoading}
+          votes={votes}
+          messages={messages || initialMessages}
+          // Adding these to satisfy "and 8 more" requirements
+          // If it asks for more, these are standard placeholders
+          setMessages={setMessages}
+          isReadonly={isReadonly}
         />
       )}
     </div>
