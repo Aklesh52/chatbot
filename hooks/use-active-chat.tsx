@@ -3,7 +3,6 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { usePathname } from "next/navigation";
 import {
   createContext,
   type Dispatch,
@@ -57,14 +56,18 @@ function extractChatId(pathname: string): string | null {
 }
 
 export function ActiveChatProvider({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
+  // FIX: Use state to handle path, avoiding the build error
+  const [pathname, setPathname] = useState("");
+  useEffect(() => {
+    setPathname(window.location.pathname);
+  }, []);
+
   const { setDataStream } = useDataStream();
   const { mutate } = useSWRConfig();
 
   const chatIdFromUrl = extractChatId(pathname);
   const isNewChat = !chatIdFromUrl;
   
-  // FIX: Initialize as null and create ID inside useEffect
   const newChatIdRef = useRef<string | null>(null);
   
   // Ensure we have an ID on the client
