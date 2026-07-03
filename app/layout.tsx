@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ActiveChatProvider } from "@/hooks/use-active-chat";
+// 1. Import the provider:
+import { DataStreamProvider } from "@/components/chat/data-stream-provider";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -79,9 +81,12 @@ export default function RootLayout({
             basePath={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
           >
             <TooltipProvider>
-              <ActiveChatProvider>
-                {children}
-              </ActiveChatProvider>
+              {/* 2. Wrap your content with both providers: */}
+              <DataStreamProvider>
+                <ActiveChatProvider>
+                  {children}
+                </ActiveChatProvider>
+              </DataStreamProvider>
             </TooltipProvider>
           </SessionProvider>
         </ThemeProvider>
