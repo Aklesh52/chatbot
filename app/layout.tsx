@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ActiveChatProvider } from "@/hooks/use-active-chat";
-// 1. Import the provider:
 import { DataStreamProvider } from "@/components/chat/data-stream-provider";
 
 import "./globals.css";
@@ -81,10 +81,11 @@ export default function RootLayout({
             basePath={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
           >
             <TooltipProvider>
-              {/* 2. Wrap your content with both providers: */}
               <DataStreamProvider>
                 <ActiveChatProvider>
-                  {children}
+                  <Suspense fallback={null}>
+                    {children}
+                  </Suspense>
                 </ActiveChatProvider>
               </DataStreamProvider>
             </TooltipProvider>
