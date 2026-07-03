@@ -63,7 +63,17 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
 
   const chatIdFromUrl = extractChatId(pathname);
   const isNewChat = !chatIdFromUrl;
-  const newChatIdRef = useRef(generateUUID());
+  
+  // FIX: Initialize as null and create ID inside useEffect
+  const newChatIdRef = useRef<string | null>(null);
+  
+  // Ensure we have an ID on the client
+  useEffect(() => {
+    if (isNewChat && !newChatIdRef.current) {
+        newChatIdRef.current = generateUUID();
+    }
+  }, [isNewChat]);
+
   const prevPathnameRef = useRef(pathname);
 
   if (isNewChat && prevPathnameRef.current !== pathname) {
@@ -71,7 +81,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
   }
   prevPathnameRef.current = pathname;
 
-  const chatId = chatIdFromUrl ?? newChatIdRef.current;
+  const chatId = chatIdFromUrl ?? newChatIdRef.current ?? "";
 
   const [currentModelId, setCurrentModelId] = useState(DEFAULT_CHAT_MODEL);
   const currentModelIdRef = useRef(currentModelId);
@@ -173,7 +183,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
 
   const loadedChatIds = useRef(new Set<string>());
 
-  if (isNewChat && !loadedChatIds.current.has(newChatIdRef.current)) {
+  if (isNewChat && newChatIdRef.current && !loadedChatIds.current.has(newChatIdRef.current)) {
     loadedChatIds.current.add(newChatIdRef.current);
   }
 
