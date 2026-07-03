@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-// 1. Add this line:
-import { ActiveChatProvider } from "@/context/ActiveChatContext"; 
+import { ActiveChatProvider } from "@/hooks/use-active-chat";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -80,7 +79,6 @@ export default function RootLayout({
             basePath={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
           >
             <TooltipProvider>
-              {/* 2. Wrap your children here: */}
               <ActiveChatProvider>
                 {children}
               </ActiveChatProvider>
