@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     unstable_rethrow(error);
     console.error("Guest sign-in failed", error);
     return new Response(
-      "Could not start a guest session because the database is unreachable or not set up.\nCheck that POSTGRES_URL points to a working Postgres database and redeploy.",
+      "Could not start a guest session because the database is unreachable or not set up.\nCheck that POSTGRES_URL (or DATABASE_URL) points to a working Postgres database and redeploy.",
       { status: 500, headers: { "content-type": "text/plain; charset=utf-8" } }
     );
   }

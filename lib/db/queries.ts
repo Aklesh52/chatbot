@@ -31,9 +31,10 @@ import {
   user,
   vote,
 } from "./schema";
+import { databaseUrl } from "./url";
 import { generateHashedPassword } from "./utils";
 
-const client = postgres(process.env.POSTGRES_URL ?? "");
+const client = postgres(databaseUrl());
 const db = drizzle(client);
 
 export async function getUser(email: string): Promise<User[]> {
