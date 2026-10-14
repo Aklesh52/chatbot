@@ -52,6 +52,27 @@ You can deploy your own version of Chatbot to Vercel with one click:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/templates/next.js/chatbot)
 
+## Running with Docker (easiest)
+
+This runs the app together with its own Postgres database and Redis, so the only thing you need installed is [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+1. Create a file named `.env` in the project folder (next to `docker-compose.yml`) containing:
+
+   ```bash
+   AUTH_SECRET=any-long-random-text      # e.g. output of: openssl rand -base64 32
+   AI_GATEWAY_API_KEY=your-vercel-ai-gateway-key
+   ```
+
+2. Start everything:
+
+   ```bash
+   docker compose up --build
+   ```
+
+3. Open [localhost:3000](http://localhost:3000) once the log shows `Ready`.
+
+Stop it with `Ctrl+C`, or `docker compose down` if it runs in the background. Chats are kept in a Docker volume between runs; `docker compose down -v` deletes them. File uploads additionally need `BLOB_READ_WRITE_TOKEN` in `.env`.
+
 ## Running locally
 
 You will need to use the environment variables [defined in `.env.example`](.env.example) to run Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.

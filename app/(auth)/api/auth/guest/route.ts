@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { signIn } from "@/app/(auth)/auth";
-import { isDevelopmentEnvironment } from "@/lib/constants";
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+  const { searchParams, protocol } = new URL(request.url);
   const rawRedirect = searchParams.get("redirectUrl") || "/";
   const redirectUrl =
     rawRedirect.startsWith("/") && !rawRedirect.startsWith("//")
@@ -14,7 +13,7 @@ export async function GET(request: Request) {
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
-    secureCookie: !isDevelopmentEnvironment,
+    secureCookie: protocol === "https:",
   });
 
   if (token) {
