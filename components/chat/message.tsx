@@ -1,5 +1,6 @@
 "use client";
 import type { UseChatHelpers } from "@ai-sdk/react";
+import Image from "next/image";
 import type { Vote } from "@/lib/db/schema";
 import type { ChatMessage } from "@/lib/types";
 import { cn, sanitizeText } from "@/lib/utils";
@@ -15,7 +16,6 @@ import {
 import { useDataStream } from "./data-stream-provider";
 import { DocumentToolResult } from "./document";
 import { DocumentPreview } from "./document-preview";
-import { SparklesIcon } from "./icons";
 import { MessageActions } from "./message-actions";
 import { MessageReasoning } from "./message-reasoning";
 import { PreviewAttachment } from "./preview-attachment";
@@ -345,9 +345,7 @@ const PurePreviewMessage = ({
       >
         {isAssistant && (
           <div className="flex h-[calc(13px*1.65)] shrink-0 items-center">
-            <div className="flex size-7 items-center justify-center rounded-lg bg-muted/60 text-muted-foreground ring-1 ring-border/50">
-              <SparklesIcon size={13} />
-            </div>
+            <BotAvatar />
           </div>
         )}
         {isAssistant ? (
@@ -360,6 +358,18 @@ const PurePreviewMessage = ({
   );
 };
 
+const BotAvatar = () => (
+  <div className="flex size-7 items-center justify-center overflow-hidden rounded-lg bg-white ring-1 ring-border/50">
+    <Image
+      alt="K Hospitality"
+      className="size-full object-contain p-0.5"
+      height={28}
+      src="/avatar.png"
+      width={28}
+    />
+  </div>
+);
+
 export const PreviewMessage = PurePreviewMessage;
 
 export const ThinkingMessage = () => {
@@ -371,9 +381,7 @@ export const ThinkingMessage = () => {
     >
       <div className="flex items-start gap-3">
         <div className="flex h-[calc(13px*1.65)] shrink-0 items-center">
-          <div className="flex size-7 items-center justify-center rounded-lg bg-muted/60 text-muted-foreground ring-1 ring-border/50">
-            <SparklesIcon size={13} />
-          </div>
+          <BotAvatar />
         </div>
 
         <div className="flex h-[calc(13px*1.65)] items-center text-[13px] leading-[1.65]">
