@@ -1,12 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { guestRegex } from "./lib/constants";
-import { databaseUrl } from "./lib/db/url";
-
-const REQUIRED_ENV = [
-  ["AUTH_SECRET", () => process.env.AUTH_SECRET],
-  ["POSTGRES_URL (or DATABASE_URL)", databaseUrl],
-] as const;
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -15,12 +9,9 @@ export async function proxy(request: NextRequest) {
     return new Response("pong", { status: 200 });
   }
 
-  const missing = REQUIRED_ENV.filter(([, get]) => !get()).map(
-    ([name]) => name
-  );
-  if (missing.length > 0) {
+  if (!process.env.AUTH_SECRET) {
     return new Response(
-      `Server is missing required environment variables: ${missing.join(", ")}.\nAdd them in your hosting settings (for Vercel: Settings > Environment Variables, for this environment) and redeploy.`,
+      "Server is missing the AUTH_SECRET environment variable.\nAdd it in your hosting settings (for Vercel: Settings > Environment Variables, for this environment) and redeploy.",
       { status: 500, headers: { "content-type": "text/plain; charset=utf-8" } }
     );
   }
