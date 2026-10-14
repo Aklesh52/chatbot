@@ -1,11 +1,12 @@
-export interface ChatModel {
-  id: string;
-  name: string;
-  provider: string;
-  description: string;
-  gatewayOrder: string[];
-  reasoningEffort?: 'low' | 'medium' | 'high';
-}
+export const DEFAULT_CHAT_MODEL = "openai/gpt-4o-mini";
+
+export const titleModel = {
+  id: "openai/gpt-4o-mini",
+  name: "GPT-4o Mini",
+  provider: "openai",
+  description: "Fast model for title generation",
+  gatewayOrder: ["openai"],
+};
 
 export type ModelCapabilities = {
   tools: boolean;
@@ -13,27 +14,21 @@ export type ModelCapabilities = {
   reasoning: boolean;
 };
 
+export type ChatModel = {
+  id: string;
+  name: string;
+  provider: string;
+  description: string;
+  gatewayOrder?: string[];
+  reasoningEffort?: "none" | "minimal" | "low" | "medium" | "high";
+};
+
 export const chatModels: ChatModel[] = [
   {
-    id: "deepseek/deepseek-chat",
-    name: "DeepSeek V3",
-    provider: "deepseek",
-    description: "Highly efficient and powerful open-weights model.",
-    gatewayOrder: ["deepinfra", "groq"],
-  },
-  {
-    id: "qwen/qwen-max",
-    name: "Qwen Max",
-    provider: "qwen",
-    description: "Alibaba's flagship multi-lingual and reasoning engine.",
-    gatewayOrder: ["together", "fireworks"],
-  },
-  {
-    id: "minimax/abab6.5-chat",
-    name: "MiniMax Abab 6.5",
-    provider: "minimax",
-    description: "High-performance model specialized in context and speed.",
-    gatewayOrder: ["minimax"],
+    id: "openai/gpt-4o-mini",
+    name: "GPT-4o Mini",
+    provider: "openai",
+    description: "Fast, lightweight intelligence for diverse tasks",
   },
   {
     id: "deepseek/deepseek-v3.2",
@@ -50,36 +45,75 @@ export const chatModels: ChatModel[] = [
     gatewayOrder: ["fireworks", "bedrock"],
   },
   {
-    id: "openai/gpt-4o-mini",
-    name: "GPT-4o Mini",
-    provider: "openai",
-    description: "Fast, lightweight intelligence for diverse tasks.",
-    gatewayOrder: ["openai"],
+    id: "alibaba/qwen-3-32b",
+    name: "Qwen 3 32B",
+    provider: "alibaba",
+    description: "Alibaba's multilingual open-weights model",
   },
   {
-    id: "qwen/qwen-2.5-coder-32b",
-    name: "Qwen 2.5 Coder 32B",
-    provider: "qwen",
-    description: "Highly capable coding model, efficient and fast.",
-    gatewayOrder: ["groq", "deepinfra"],
-  },
-  {
-    id: "minimax/minimax-m2-5",
-    name: "MiniMax M2.5",
+    id: "minimax/minimax-m2",
+    name: "MiniMax M2",
     provider: "minimax",
-    description: "High-performance productivity and coding model.",
-    gatewayOrder: ["openrouter"],
+    description: "High-performance productivity and coding model",
   },
   {
-    id: "meta-llama/llama-3.3-70b-instruct",
+    id: "meta/llama-3.3-70b",
     name: "Llama 3.3 70B",
     provider: "meta",
-    description: "The gold standard for free, high-performance general tasks.",
-    gatewayOrder: ["groq", "deepinfra"],
-  }
+    description: "Strong open model for general tasks",
+  },
+  {
+    id: "openai/gpt-oss-120b",
+    name: "GPT OSS 120B",
+    provider: "openai",
+    description: "Open-source 120B parameter model",
+    gatewayOrder: ["fireworks", "bedrock"],
+    reasoningEffort: "low",
+  },
 ];
 
-export const DEFAULT_CHAT_MODEL = "openai/gpt-4o-mini";
+export async function getCapabilities(): Promise<
+  Record<string, ModelCapabilities>
+> {
+  const results = await Promise.all(
+    chatModels.map(async (model) => {
+      try {
+        const res = await fetch(
+          `https://ai-gateway.vercel.sh/v1/models/${model.id}/endpoints`,
+          { next: { revalidate: 86_400 } }
+        );
+        if (!res.ok) {
+          return [model.id, { tools: false, vision: false, reasoning: false }];
+        }
+
+        const json = await res.json();
+        const endpoints = json.data?.endpoints ?? [];
+        const params = new Set(
+          endpoints.flatMap(
+            (e: { supported_parameters?: string[] }) =>
+              e.supported_parameters ?? []
+          )
+        );
+        const inputModalities = new Set(
+          json.data?.architecture?.input_modalities ?? []
+        );
+
+        return [
+          model.id,
+          {
+            tools: params.has("tools"),
+            vision: inputModalities.has("image"),
+            reasoning: params.has("reasoning"),
+          },
+        ];
+      } catch {
+        return [model.id, { tools: false, vision: false, reasoning: false }];
+      }
+    })
+  );
+
+  return Object.fromEntries(results);
+}
 
 export const isDemo = process.env.IS_DEMO === "1";
 
@@ -94,7 +128,9 @@ export type GatewayModelWithCapabilities = ChatModel & {
   capabilities: ModelCapabilities;
 };
 
-export async function getAllGatewayModels(): Promise<GatewayModelWithCapabilities[]> {
+export async function getAllGatewayModels(): Promise<
+  GatewayModelWithCapabilities[]
+> {
   try {
     const res = await fetch("https://ai-gateway.vercel.sh/v1/models", {
       next: { revalidate: 86_400 },
@@ -102,6 +138,7 @@ export async function getAllGatewayModels(): Promise<GatewayModelWithCapabilitie
     if (!res.ok) {
       return [];
     }
+
     const json = await res.json();
     return (json.data ?? [])
       .filter((m: GatewayModel) => m.type === "language")
@@ -127,33 +164,13 @@ export function getActiveModels(): ChatModel[] {
 
 export const allowedModelIds = new Set(chatModels.map((m) => m.id));
 
-export const modelsByProvider = chatModels.reduce<Record<string, ChatModel[]>>((acc, model) => {
-  if (!acc[model.provider]) {
-    acc[model.provider] = [];
-  }
-  acc[model.provider].push(model);
-  return acc;
-}, {});
-
-export const titleModel = {
-  id: "openai/gpt-4o-mini",
-  name: "GPT-4o Mini",
-  provider: "openai",
-  description: "Fast, lightweight intelligence for diverse tasks.",
-  gatewayOrder: ["openai"],
-};
-
-// Fixed to return a record so calling getCapabilities() matches your existing app code
-export async function getCapabilities(): Promise<Record<string, ModelCapabilities>> {
-  const capabilities: Record<string, ModelCapabilities> = {};
-  
-  for (const model of chatModels) {
-    capabilities[model.id] = {
-      tools: true,
-      vision: true,
-      reasoning: false,
-    };
-  }
-  
-  return capabilities;
-}
+export const modelsByProvider = chatModels.reduce(
+  (acc, model) => {
+    if (!acc[model.provider]) {
+      acc[model.provider] = [];
+    }
+    acc[model.provider].push(model);
+    return acc;
+  },
+  {} as Record<string, ChatModel[]>
+);
