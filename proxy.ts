@@ -2,11 +2,21 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { guestRegex } from "./lib/constants";
 
+const REQUIRED_ENV = ["AUTH_SECRET", "POSTGRES_URL"] as const;
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/ping")) {
     return new Response("pong", { status: 200 });
+  }
+
+  const missing = REQUIRED_ENV.filter((name) => !process.env[name]);
+  if (missing.length > 0) {
+    return new Response(
+      `Server is missing required environment variables: ${missing.join(", ")}.\nAdd them in your hosting settings (for Vercel: Settings > Environment Variables, for this environment) and redeploy.`,
+      { status: 500, headers: { "content-type": "text/plain; charset=utf-8" } }
+    );
   }
 
   if (pathname.startsWith("/api/auth")) {
